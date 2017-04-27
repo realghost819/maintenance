@@ -17,14 +17,14 @@ public class DbObject {
 
     private long version_id;
 
-    @Column(name="dialect",nullable=false,length=100)
     private String dialect;
 
-    @Column(name="type",nullable=false,length=100)
     private String type;
 
-    @Column(name="name",nullable=false,length=200)
     private String name;
+
+    @Column(name = "ddl",length = 65535)
+    private String ddl;
 
 
 }
