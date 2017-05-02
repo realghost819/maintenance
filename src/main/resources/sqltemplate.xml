@@ -25,17 +25,18 @@
 		order by TABLE_NAME, K.COLUMN_ID;
 	</sql-statement>
 
-	<sql-statement id="reset_ddl_param" desc="查询oracle数据库对象">
-		select a.OBJECT_TYPE,a.OBJECT_NAME,a.created,a.last_ddl_time,a.status,b.comments,DBMS_METADATA.GET_DDL(a.object_type,a.object_name)
-		from user_objects a,user_tab_comments b
-		where
-		a.object_type in ('TABLE','PROCEDURE','DATABASE LINK','PACKAGE','PACKAGE BODY','TRIGGER','VIEW','INDEX','FUNCTION','JOB')
-		and a.object_type = b.table_type(+) and a.object_name = b.table_name(+);
+	<sql-statement id="reset_ddl_sql1" desc="重置metadata参数">
+		EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'STORAGE',FALSE)
 	</sql-statement>
-	EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'STORAGE',FALSE);
-	EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'TABLESPACE',FALSE);
-	EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'SEGMENT_ATTRIBUTES',FALSE);
-	EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'CONSTRAINTS',FALSE);
-	
+	<sql-statement id="reset_ddl_sql2" desc="重置metadata参数">
+		EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'TABLESPACE',FALSE)
+	</sql-statement>
+	<sql-statement id="reset_ddl_sql3" desc="重置metadata参数">
+		EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'SEGMENT_ATTRIBUTES',FALSE)
+	</sql-statement>
+	<sql-statement id="reset_ddl_sql4" desc="重置metadata参数">
+		EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'CONSTRAINTS',FALSE)
+	</sql-statement>
+
 	
 </Template>

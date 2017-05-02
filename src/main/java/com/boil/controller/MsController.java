@@ -1,8 +1,10 @@
 package com.boil.controller;
 
-import com.boil.dao.MsDao;
+import com.boil.dao.ProjectDao;
 import com.boil.dao.TaskDao;
 import com.boil.models.MsTask;
+import com.boil.models.Project;
+import com.boil.service.MsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,10 @@ public class MsController {
 
     @Autowired
     private TaskDao taskDao;
+    @Autowired
+    private ProjectDao projectDao;
+    @Autowired
+    private MsService msService;
 
     @RequestMapping("/scan")
     @ResponseBody
@@ -31,10 +37,20 @@ public class MsController {
         Callable<Integer> scanTask = new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
-                MsTask task = new MsTask(id,"scan");
+                MsTask task = new MsTask(id, "scan");
                 taskDao.save(task);
                 TimeUnit.SECONDS.sleep(10);
-                task.success();
+
+                try {
+                    Project project = projectDao.findOne(id);
+                    msService.scanProject(project);
+                    task.success();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    task.fail();
+                }
+
+
                 taskDao.save(task);
                 return 1;
             }

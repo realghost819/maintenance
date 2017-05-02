@@ -1,15 +1,12 @@
 package com.boil.service;
 
-import com.boil.models.DbObject;
 import com.boil.models.DbObjectTmp;
 import com.boil.models.Project;
 import com.dansun.server.core.sqltemplate.context.SqlTemplateContext;
 import com.dansun.server.core.sqltemplate.service.SqlTemplateService;
+import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +14,7 @@ import java.util.List;
  * 运维管理服务类
  * Created by songyu on 2017/4/27.
  */
+@Service
 public class MsService {
 
     private SqlTemplateService sqlTemplateService = null;
@@ -40,6 +38,7 @@ public class MsService {
     public void scanProject(Project project) {
         Connection con = null;// 创建一个数据库连接
         PreparedStatement pre = null;// 创建预编译语句对象，一般都是用这个而不用Statement
+        Statement statement = null;// 创建预编译语句对象，一般都是用这个而不用Statement
         ResultSet result = null;// 创建一个结果集对象
         String dialect = "";//不同数据库类型
         String sql_scan_db_objects = sqlTemplateService.getSql("sql_scan_db_objects_oracle");//查询数据库对象sql
@@ -49,6 +48,15 @@ public class MsService {
             System.out.println("开始尝试连接数据库！");
             con = DriverManager.getConnection(project.getJdbcUrl(), project.getUsername(), project.getPassword());// 获取连接
             System.out.println("连接成功！");
+            statement = con.createStatement();
+            String sql = sqlTemplateService.getSql("reset_ddl_sql1");
+            statement.executeUpdate(sql);
+            sql = sqlTemplateService.getSql("reset_ddl_sql2");
+            statement.executeUpdate(sql);
+            sql = sqlTemplateService.getSql("reset_ddl_sql3");
+            statement.executeUpdate(sql);
+            sql = sqlTemplateService.getSql("reset_ddl_sql4");
+            statement.executeUpdate(sql);
             pre = con.prepareStatement(sql_scan_db_objects);// 实例化预编译语句
             result = pre.executeQuery();// 执行查询，注意括号中不需要再加参数
             while (result.next()) {
