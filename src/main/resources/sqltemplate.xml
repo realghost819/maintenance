@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Template PUBLIC 
+	"-//SqlTemplate DTD 1.0//EN"
+	"http://sqltemplate.core.server.dansun.com/sql-template.dtd">
+<Template>
+	<sql-statement id="sql_scan_db_objects_oracle" desc="查询oracle数据库对象">
+		select a.OBJECT_TYPE,a.OBJECT_NAME,a.created,a.last_ddl_time,a.status,b.comments,DBMS_METADATA.GET_DDL(a.object_type,a.object_name)
+		from user_objects a,user_tab_comments b
+		where
+		a.object_type in ('TABLE','PROCEDURE','DATABASE LINK','PACKAGE','PACKAGE BODY','TRIGGER','VIEW','INDEX','FUNCTION','JOB')
+		and a.object_type = b.table_type(+) and a.object_name = b.table_name(+);
+	</sql-statement>
+	<sql-statement id="sql_scan_db_objects_oracle" desc="查询oracle">
+		select TABLE_NAME,
+		COLUMN_NAME,
+		K.DATA_TYPE ||
+		case when K.DATA_SCALE is not null then '(' || K.DATA_PRECISION || ',' || K.DATA_SCALE || ')'
+		when K.DATA_PRECISION is not null then '(' || K.DATA_PRECISION || ')'
+		when K.DATA_LENGTH is not null and K.DATA_TYPE like '%CHAR%' then '(' || K.DATA_LENGTH || ')'
+		end DATA_TYPE,
+		C.COMMENTS
+		from user_col_comments C join user_tab_cols K
+		using(TABLE_NAME,COLUMN_NAME)
+		where table_name = 'DEPT'
+		order by TABLE_NAME, K.COLUMN_ID;
+	</sql-statement>
+
+	<sql-statement id="reset_ddl_param" desc="查询oracle数据库对象">
+		select a.OBJECT_TYPE,a.OBJECT_NAME,a.created,a.last_ddl_time,a.status,b.comments,DBMS_METADATA.GET_DDL(a.object_type,a.object_name)
+		from user_objects a,user_tab_comments b
+		where
+		a.object_type in ('TABLE','PROCEDURE','DATABASE LINK','PACKAGE','PACKAGE BODY','TRIGGER','VIEW','INDEX','FUNCTION','JOB')
+		and a.object_type = b.table_type(+) and a.object_name = b.table_name(+);
+	</sql-statement>
+	EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'STORAGE',FALSE);
+	EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'TABLESPACE',FALSE);
+	EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'SEGMENT_ATTRIBUTES',FALSE);
+	EXECUTE DBMS_METADATA.SET_TRANSFORM_PARAM(DBMS_METADATA.SESSION_TRANSFORM,'CONSTRAINTS',FALSE);
+	
+	
+</Template>
