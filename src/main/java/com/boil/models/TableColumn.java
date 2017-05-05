@@ -1,9 +1,17 @@
 package com.boil.models;
 
+import javax.persistence.*;
+
 /**
  * Created by songyu on 2017/4/27.
  */
+@Entity
+@Table(name = "tb_ms_table_column")
 public class TableColumn {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
     private long version_id;
 
     private long project_id;

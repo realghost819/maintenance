@@ -32,7 +32,7 @@ public class DbObject {
 
     private String status;
 
-    @Column(name = "ddl_text",length = 65535)
+    @Column(name = "ddl_text",columnDefinition="MEDIUMTEXT")
     private String ddl_text;
 
     private boolean enable;
@@ -133,5 +133,15 @@ public class DbObject {
 
     public void setDdl_text(String ddl_text) {
         this.ddl_text = ddl_text;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof DbObject) {
+            DbObject target = (DbObject) obj;
+            if (target.getObject_type().equals(this.object_type) && target.getObject_name().equals(this.object_name))
+                return true;
+        }
+        return false;
     }
 }

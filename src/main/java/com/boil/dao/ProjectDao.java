@@ -4,8 +4,11 @@ import com.boil.models.MsTask;
 import com.boil.models.Project;
 import org.springframework.data.repository.CrudRepository;
 
+import javax.transaction.Transactional;
+
 /**
  * Created by songyu on 2017/5/2.
  */
+@Transactional
 public interface ProjectDao extends CrudRepository<Project, Long> {
 }

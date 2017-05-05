@@ -43,7 +43,7 @@ public class MsController {
 
                 try {
                     Project project = projectDao.findOne(id);
-                    msService.scanProject(project);
+                    msService.scanProject(project,task);
                     task.success();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -56,7 +56,7 @@ public class MsController {
             }
         };
         executor.submit(scanTask);
-        return "this is a test";
+        return "this is a scan task";
     }
 }
 

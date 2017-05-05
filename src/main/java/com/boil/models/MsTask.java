@@ -24,6 +24,16 @@ public class MsTask {
 
     private int status = 0;
 
+    private int result = 0;
+
+    public int getResult() {
+        return result;
+    }
+
+    public void setResult(int result) {
+        this.result = result;
+    }
+
     public MsTask() {
     }
 
